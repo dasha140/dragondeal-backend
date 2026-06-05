@@ -64,3 +64,4 @@ Thumbs.db
 /nbdist/
 /.nb-gradle/
 .qwen/
+blockchain/types/
