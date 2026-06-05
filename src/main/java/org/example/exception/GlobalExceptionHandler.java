@@ -105,4 +105,20 @@ public class GlobalExceptionHandler {
                         "path", request.getRequestURI()
                 ));
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalStateException(
+            IllegalStateException exception,
+            HttpServletRequest request
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(Map.of(
+                        "timestamp", LocalDateTime.now(),
+                        "status", 503,
+                        "error", "Service Not Configured",
+                        "message", exception.getMessage(),
+                        "path", request.getRequestURI()
+                ));
+    }
 }

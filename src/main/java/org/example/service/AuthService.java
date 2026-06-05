@@ -1,6 +1,7 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.config.FirebaseConfig;
 import org.example.domain.AppUser;
 import org.example.domain.EmailVerification;
 import org.example.domain.enums.UserRole;
@@ -33,6 +34,7 @@ public class AuthService {
     private final EmailVerificationRepository emailVerificationRepository;
     private final JwtService jwtService;
     private final EmailService emailService;
+    private final FirebaseConfig firebaseConfig;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final SecureRandom secureRandom = new SecureRandom();
@@ -71,6 +73,13 @@ public class AuthService {
 
     @Transactional
     public AuthResponse loginWithFirebase(String idToken) {
+        if (!firebaseConfig.isFirebaseEnabled()) {
+            throw new IllegalStateException(
+                    "Firebase auth is not configured. " +
+                    "Add FIREBASE_SERVICE_ACCOUNT_PATH env or firebase-service-account.json."
+            );
+        }
+
         try {
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
 
@@ -403,6 +412,10 @@ public class AuthService {
     }
 
     private void updateFirebasePasswordIfLinked(AppUser user, String newPassword) {
+        if (!firebaseConfig.isFirebaseEnabled()) {
+            return;
+        }
+
         String firebaseUid = user.getFirebaseUid();
 
         if (firebaseUid == null || firebaseUid.trim().isEmpty()) {
@@ -420,6 +433,10 @@ public class AuthService {
     }
 
     private void updateFirebaseEmailIfLinked(AppUser user, String newEmail) {
+        if (!firebaseConfig.isFirebaseEnabled()) {
+            return;
+        }
+
         String firebaseUid = user.getFirebaseUid();
 
         if (firebaseUid == null || firebaseUid.trim().isEmpty()) {

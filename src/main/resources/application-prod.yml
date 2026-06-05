@@ -1,10 +1,15 @@
 # Production / Railway overrides
 # Activate with: --spring.profiles.active=prod
-# Railway: add SPRING_PROFILES_ACTIVE=prod to env variables
+# Railway: set SPRING_PROFILES_ACTIVE=prod in env variables
+
+# Railway provides DATABASE_URL as postgres://host:port/db
+# Spring needs jdbc:postgresql://host:port/db
+# Use SPRING_DATASOURCE_URL env var if you need full control:
+#   SPRING_DATASOURCE_URL=jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
 
 spring:
   datasource:
-    url: ${DATABASE_URL}
+    url: ${SPRING_DATASOURCE_URL:${DATABASE_URL}}
     username: ${SPRING_DATASOURCE_USERNAME:}
     password: ${SPRING_DATASOURCE_PASSWORD:}
     driver-class-name: org.postgresql.Driver
@@ -20,3 +25,4 @@ spring:
 app:
   jwt:
     secret: ${JWT_SECRET}
+
