@@ -18,6 +18,7 @@ import org.example.dto.request.RegisterConfirmRequest;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import org.example.dto.request.RequestEmailChangeRequest;
@@ -40,7 +41,7 @@ public class AuthService {
     private final SecureRandom secureRandom = new SecureRandom();
 
     @Transactional
-    public void requestRegistrationCode(RegisterRequest request) {
+    public Optional<String> requestRegistrationCode(RegisterRequest request) {
         String username = request.username().trim();
         String email = request.email().trim().toLowerCase();
         String password = request.password();
@@ -68,7 +69,7 @@ public class AuthService {
 
         emailVerificationRepository.save(verification);
 
-        emailService.sendVerificationCode(email, code);
+        return emailService.sendVerificationCode(email, code);
     }
 
     @Transactional
@@ -218,7 +219,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void requestEmailChange(AppUser currentUser, RequestEmailChangeRequest request) {
+    public Optional<String> requestEmailChange(AppUser currentUser, RequestEmailChangeRequest request) {
         String newEmail = request.newEmail().trim().toLowerCase();
         String currentPassword = request.currentPassword();
 
@@ -252,7 +253,7 @@ public class AuthService {
 
         emailVerificationRepository.save(verification);
 
-        emailService.sendVerificationCode(newEmail, code);
+        return emailService.sendVerificationCode(newEmail, code);
     }
 
     @Transactional
@@ -296,7 +297,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void requestPasswordReset(PasswordResetRequest request) {
+    public Optional<String> requestPasswordReset(PasswordResetRequest request) {
         String email = request.email().trim().toLowerCase();
 
         AppUser user = appUserRepository.findByEmail(email)
@@ -317,7 +318,7 @@ public class AuthService {
 
         emailVerificationRepository.save(verification);
 
-        emailService.sendVerificationCode(email, code);
+        return emailService.sendVerificationCode(email, code);
     }
 
     @Transactional

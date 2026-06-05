@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -29,10 +30,10 @@ public class EmailService {
         log.info("=== EmailService: mail dev mode enabled = {} ===", devMode);
     }
 
-    public void sendVerificationCode(String email, String code) {
+    public Optional<String> sendVerificationCode(String email, String code) {
         if (devMode) {
             log.info("DEV EMAIL CODE for {}: {}", email, code);
-            return;
+            return Optional.of(code);
         }
 
         SimpleMailMessage message = new SimpleMailMessage();
@@ -50,6 +51,7 @@ public class EmailService {
 
         try {
             mailSender.send(message);
+            return Optional.empty();
         } catch (MailException exception) {
             log.error("Failed to send verification code to {}: {}", email, exception.getMessage());
             throw new EmailDeliveryException("Не удалось отправить код подтверждения", exception);

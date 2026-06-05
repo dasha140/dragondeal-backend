@@ -15,6 +15,9 @@ import org.example.dto.request.RegisterConfirmRequest;
 import org.example.dto.request.FirebaseLoginRequest;import org.example.dto.request.RequestEmailChangeRequest;
 import org.example.dto.request.ConfirmEmailChangeRequest;import org.example.dto.request.PasswordResetRequest;
 import org.example.dto.request.PasswordResetConfirmRequest;
+import org.example.dto.response.CodeSentResponse;
+
+import java.util.Optional;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -31,11 +34,13 @@ public class AuthController {
     }
 
     @PostMapping("/register/request")
-    public MessageResponse requestRegistrationCode(
+    public CodeSentResponse requestRegistrationCode(
             @Valid @RequestBody RegisterRequest request
     ) {
-        authService.requestRegistrationCode(request);
-        return new MessageResponse("Verification code sent");
+        Optional<String> devCode = authService.requestRegistrationCode(request);
+        return devCode
+                .map(CodeSentResponse::sentWithDevCode)
+                .orElseGet(CodeSentResponse::sent);
     }
 
     @PostMapping("/register/confirm")
@@ -56,11 +61,13 @@ public class AuthController {
     }
 
     @PostMapping("/password-reset/request")
-    public MessageResponse requestPasswordReset(
+    public CodeSentResponse requestPasswordReset(
             @Valid @RequestBody PasswordResetRequest request
     ) {
-        authService.requestPasswordReset(request);
-        return new MessageResponse("Verification code sent");
+        Optional<String> devCode = authService.requestPasswordReset(request);
+        return devCode
+                .map(CodeSentResponse::sentWithDevCode)
+                .orElseGet(CodeSentResponse::sent);
     }
 
     @PostMapping("/password-reset/confirm")
@@ -95,14 +102,16 @@ public class AuthController {
     }
 
     @PostMapping("/email-change/request")
-    public MessageResponse requestEmailChange(
+    public CodeSentResponse requestEmailChange(
             HttpServletRequest httpRequest,
             @Valid @RequestBody RequestEmailChangeRequest request
     ) {
         AppUser currentUser = currentUserService.getCurrentUser(httpRequest);
-        authService.requestEmailChange(currentUser, request);
+        Optional<String> devCode = authService.requestEmailChange(currentUser, request);
 
-        return new MessageResponse("Verification code sent");
+        return devCode
+                .map(CodeSentResponse::sentWithDevCode)
+                .orElseGet(CodeSentResponse::sent);
     }
 
     @PostMapping("/email-change/confirm")
