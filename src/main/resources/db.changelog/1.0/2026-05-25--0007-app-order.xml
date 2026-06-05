@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2026-05-25--0007-app-order" author="elvsf">
+
+        <preConditions>
+            <not>
+                <tableExists tableName="app_order"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="app_order">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="buyer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="seller_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="listing_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="total_price" type="DECIMAL(19,2)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="currency" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="network" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="escrow_contract" type="VARCHAR(255)"/>
+
+            <column name="escrow_deal_id" type="VARCHAR(255)"/>
+
+            <column name="payment_tx_hash" type="VARCHAR(255)"/>
+
+            <column name="release_tx_hash" type="VARCHAR(255)"/>
+
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="paid_at" type="TIMESTAMP"/>
+
+            <column name="seller_marked_done_at" type="TIMESTAMP"/>
+
+            <column name="completed_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="app_order"
+                baseColumnNames="buyer_id"
+                referencedTableName="app_user"
+                referencedColumnNames="id"
+                constraintName="fk_order_buyer"/>
+
+        <addForeignKeyConstraint
+                baseTableName="app_order"
+                baseColumnNames="seller_id"
+                referencedTableName="app_user"
+                referencedColumnNames="id"
+                constraintName="fk_order_seller"/>
+
+        <addForeignKeyConstraint
+                baseTableName="app_order"
+                baseColumnNames="listing_id"
+                referencedTableName="listing"
+                referencedColumnNames="id"
+                constraintName="fk_order_listing"/>
+
+    </changeSet>
+
+</databaseChangeLog>

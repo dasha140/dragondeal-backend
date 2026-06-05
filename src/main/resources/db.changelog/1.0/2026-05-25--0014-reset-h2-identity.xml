@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2026-05-25--0014-reset-h2-identity" author="elvsf">
+        <sql dbms="h2">ALTER TABLE app_user ALTER COLUMN id RESTART WITH 4</sql>
+        <sql dbms="h2">ALTER TABLE category ALTER COLUMN id RESTART WITH 8</sql>
+        <sql dbms="h2">ALTER TABLE game ALTER COLUMN id RESTART WITH 9</sql>
+        <sql dbms="h2">ALTER TABLE wallet ALTER COLUMN id RESTART WITH 3</sql>
+        <sql dbms="h2">ALTER TABLE listing ALTER COLUMN id RESTART WITH 4</sql>
+        <sql dbms="h2">ALTER TABLE listing_image ALTER COLUMN id RESTART WITH 4</sql>
+        <sql dbms="h2">ALTER TABLE app_order ALTER COLUMN id RESTART WITH 3</sql>
+        <sql dbms="h2">ALTER TABLE wallet_transaction ALTER COLUMN id RESTART WITH 4</sql>
+        <sql dbms="h2">ALTER TABLE chat ALTER COLUMN id RESTART WITH 3</sql>
+        <sql dbms="h2">ALTER TABLE chat_message ALTER COLUMN id RESTART WITH 5</sql>
+        <sql dbms="h2">ALTER TABLE review ALTER COLUMN id RESTART WITH 3</sql>
+        <sql dbms="h2">ALTER TABLE dispute ALTER COLUMN id RESTART WITH 2</sql>
+        <sql dbms="h2">ALTER TABLE dispute_evidence ALTER COLUMN id RESTART WITH 3</sql>
+    </changeSet>
+
+</databaseChangeLog>

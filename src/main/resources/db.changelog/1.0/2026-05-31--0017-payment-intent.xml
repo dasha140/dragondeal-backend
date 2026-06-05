@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2026-05-31--0017-payment-intent" author="elvsf">
+        <createTable tableName="payment_intent">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="order_id" type="BIGINT">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="payment_method_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="buyer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="seller_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="amount" type="DECIMAL(19,8)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="amount_atomic" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="chain_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="token_contract" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="escrow_contract" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="escrow_deal_id" type="VARCHAR(100)"/>
+
+            <column name="payment_tx_hash" type="VARCHAR(128)"/>
+
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="expires_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="paid_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="payment_intent"
+                baseColumnNames="order_id"
+                referencedTableName="app_order"
+                referencedColumnNames="id"
+                constraintName="fk_payment_intent_order"/>
+
+        <addForeignKeyConstraint
+                baseTableName="payment_intent"
+                baseColumnNames="payment_method_id"
+                referencedTableName="payment_method"
+                referencedColumnNames="id"
+                constraintName="fk_payment_intent_payment_method"/>
+
+        <createIndex tableName="payment_intent" indexName="idx_payment_intent_order_id">
+            <column name="order_id"/>
+        </createIndex>
+
+        <createIndex tableName="payment_intent" indexName="idx_payment_intent_status">
+            <column name="status"/>
+        </createIndex>
+
+        <createIndex tableName="payment_intent" indexName="idx_payment_intent_tx_hash">
+            <column name="payment_tx_hash"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

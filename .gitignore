@@ -1,0 +1,66 @@
+### Build / Compile ###
+target/
+build/
+!src/main/**/target/
+!src/test/**/target/
+
+### Database / Local Data ###
+data/
+
+### User Uploads ###
+uploads/
+
+### Secrets / Credentials ###
+firebase-service-account.json
+*service-account*.json
+.env
+*.env
+local.properties
+keystore.properties
+*.jks
+*.pem
+*.key
+
+### IDE ###
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.log
+
+### Blockchain (Hardhat) ###
+node_modules/
+blockchain/node_modules/
+blockchain/cache/
+blockchain/artifacts/
+blockchain/typechain-types/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Java / Spring ###
+.kotlin
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### Maven Wrapper (keep the jar) ###
+!.mvn/wrapper/maven-wrapper.jar
+
+### IDE generated inside src (keep src) ###
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+.qwen/

@@ -1,0 +1,57 @@
+server:
+  address: 0.0.0.0
+  port: ${PORT:8081}
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:file:./data/marketgm-db;AUTO_SERVER=TRUE;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH}
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  h2:
+    console:
+      enabled: ${H2_CONSOLE_ENABLED:false}
+      path: /h2-console
+
+  liquibase:
+    enabled: false
+
+app:
+  mail:
+    dev-mode: ${APP_MAIL_DEV_MODE:false}
+    from: ${MAIL_FROM:${MAIL_USERNAME:noreply@marketgm.com}}
+  jwt:
+    secret: ${JWT_SECRET:dev-secret-key-do-not-use-in-production-change-this-now}
+    expiration-ms: 86400000
+
+blockchain:
+  hardhatLocalRpcUrl: http://127.0.0.1:8545
+

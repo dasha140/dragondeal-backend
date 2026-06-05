@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2026-05-25--0006-listing-image" author="elvsf">
+
+        <preConditions>
+            <not>
+                <tableExists tableName="listing_image"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="listing_image">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="listing_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="image_url" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="listing_image"
+                baseColumnNames="listing_id"
+                referencedTableName="listing"
+                referencedColumnNames="id"
+                constraintName="fk_listing_image_listing"/>
+
+    </changeSet>
+
+</databaseChangeLog>

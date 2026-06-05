@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2026-05-25--0012-dispute" author="elvsf">
+
+        <preConditions>
+            <not>
+                <tableExists tableName="dispute"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="dispute">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="order_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="opened_by" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="reason" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="admin_decision" type="TEXT"/>
+
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="resolved_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="dispute"
+                baseColumnNames="order_id"
+                referencedTableName="app_order"
+                referencedColumnNames="id"
+                constraintName="fk_dispute_order"/>
+
+        <addForeignKeyConstraint
+                baseTableName="dispute"
+                baseColumnNames="opened_by"
+                referencedTableName="app_user"
+                referencedColumnNames="id"
+                constraintName="fk_dispute_opened_by"/>
+
+    </changeSet>
+
+</databaseChangeLog>

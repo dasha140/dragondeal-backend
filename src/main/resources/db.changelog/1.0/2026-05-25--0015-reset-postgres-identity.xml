@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2026-05-25--0015-reset-postgres-identity" author="elvsf">
+        <sql dbms="postgresql">
+            SELECT setval(pg_get_serial_sequence('app_user', 'id'), (SELECT MAX(id) FROM app_user), true);
+            SELECT setval(pg_get_serial_sequence('category', 'id'), (SELECT MAX(id) FROM category), true);
+            SELECT setval(pg_get_serial_sequence('game', 'id'), (SELECT MAX(id) FROM game), true);
+            SELECT setval(pg_get_serial_sequence('wallet', 'id'), (SELECT MAX(id) FROM wallet), true);
+            SELECT setval(pg_get_serial_sequence('listing', 'id'), (SELECT MAX(id) FROM listing), true);
+            SELECT setval(pg_get_serial_sequence('listing_image', 'id'), (SELECT MAX(id) FROM listing_image), true);
+            SELECT setval(pg_get_serial_sequence('app_order', 'id'), (SELECT MAX(id) FROM app_order), true);
+            SELECT setval(pg_get_serial_sequence('wallet_transaction', 'id'), (SELECT MAX(id) FROM wallet_transaction), true);
+            SELECT setval(pg_get_serial_sequence('chat', 'id'), (SELECT MAX(id) FROM chat), true);
+            SELECT setval(pg_get_serial_sequence('chat_message', 'id'), (SELECT MAX(id) FROM chat_message), true);
+            SELECT setval(pg_get_serial_sequence('review', 'id'), (SELECT MAX(id) FROM review), true);
+            SELECT setval(pg_get_serial_sequence('dispute', 'id'), (SELECT MAX(id) FROM dispute), true);
+            SELECT setval(pg_get_serial_sequence('dispute_evidence', 'id'), (SELECT MAX(id) FROM dispute_evidence), true);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

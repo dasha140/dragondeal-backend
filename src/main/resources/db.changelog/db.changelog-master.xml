@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <include file="db.changelog/1.0/2026-05-25--0001-app-user.xml"/>
+    <include file="db.changelog/1.0/2026-05-25--0002-category.xml"/>
+    <include file="db.changelog/1.0/2026-05-25--0003-game.xml"/>
+    <include file="db.changelog/1.0/2026-05-25--0004-wallet.xml"/>
+    <include file="db.changelog/1.0/2026-05-25--0005-listing.xml"/>
+    <include file="db.changelog/1.0/2026-05-25--0006-listing-image.xml"/>
+    <include file="db.changelog/1.0/2026-05-25--0007-app-order.xml"/>
+    <include file="db.changelog/1.0/2026-05-25--0008-wallet-transaction.xml"/>
+    <include file="db.changelog/1.0/2026-05-25--0009-chat.xml"/>
+    <include file="db.changelog/1.0/2026-05-25--0010-chat-message.xml"/>
+    <include file="db.changelog/1.0/2026-05-25--0011-review.xml"/>
+    <include file="db.changelog/1.0/2026-05-25--0012-dispute.xml"/>
+    <include file="db.changelog/1.0/2026-05-25--0013-dispute-evidence.xml"/>
+
+    <include file="db.changelog/data/2026-05-25--0001-app-user-data.xml"/>
+    <include file="db.changelog/data/2026-05-25--0002-category-data.xml"/>
+    <include file="db.changelog/data/2026-05-25--0003-game-data.xml"/>
+    <include file="db.changelog/data/2026-05-25--0004-wallet-data.xml"/>
+    <include file="db.changelog/data/2026-05-25--0005-listing-data.xml"/>
+    <include file="db.changelog/data/2026-05-25--0006-listing-image-data.xml"/>
+    <include file="db.changelog/data/2026-05-25--0007-app-order-data.xml"/>
+    <include file="db.changelog/data/2026-05-25--0008-wallet-transaction-data.xml"/>
+    <include file="db.changelog/data/2026-05-25--0009-chat-data.xml"/>
+    <include file="db.changelog/data/2026-05-25--0010-chat-message-data.xml"/>
+    <include file="db.changelog/data/2026-05-25--0011-review-data.xml"/>
+    <include file="db.changelog/data/2026-05-25--0012-dispute-data.xml"/>
+    <include file="db.changelog/data/2026-05-25--0013-dispute-evidence-data.xml"/>
+    <include file="db.changelog/1.0/2026-05-25--0014-reset-h2-identity.xml"/>
+    <include file="db.changelog/1.0/2026-05-25--0015-reset-postgres-identity.xml"/>
+    <include file="db.changelog/1.0/2026-05-31--0016-payment-method.xml"/>
+    <include file="db.changelog/data/2026-05-31--0016-payment-method-data.xml"/>
+    <include file="db.changelog/1.0/2026-05-31--0017-payment-intent.xml"/>
+
+</databaseChangeLog>
