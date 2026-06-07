@@ -1,7 +1,6 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.config.FirebaseConfig;
 import org.example.domain.AppUser;
 import org.example.domain.EmailVerification;
 import org.example.domain.enums.UserRole;
@@ -19,14 +18,10 @@ import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseToken;
 import org.example.dto.request.RequestEmailChangeRequest;
 import org.example.dto.request.ConfirmEmailChangeRequest;
-import com.google.firebase.auth.UserRecord;
 import org.example.dto.request.PasswordResetRequest;
 import org.example.dto.request.PasswordResetConfirmRequest;
-import com.google.firebase.auth.UserRecord;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -35,7 +30,6 @@ public class AuthService {
     private final EmailVerificationRepository emailVerificationRepository;
     private final JwtService jwtService;
     private final EmailService emailService;
-    private final FirebaseConfig firebaseConfig;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final SecureRandom secureRandom = new SecureRandom();
@@ -70,55 +64,6 @@ public class AuthService {
         emailVerificationRepository.save(verification);
 
         return emailService.sendVerificationCode(email, code);
-    }
-
-    @Transactional
-    public AuthResponse loginWithFirebase(String idToken) {
-        if (!firebaseConfig.isFirebaseEnabled()) {
-            throw new IllegalStateException(
-                    "Firebase auth is not configured. " +
-                    "Add FIREBASE_SERVICE_ACCOUNT_PATH env or firebase-service-account.json."
-            );
-        }
-
-        try {
-            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
-
-            String firebaseUid = decodedToken.getUid();
-            String email = decodedToken.getEmail();
-
-            if (firebaseUid == null || firebaseUid.trim().isEmpty()) {
-                throw new IllegalArgumentException("Firebase token does not contain uid");
-            }
-
-            if (email == null || email.trim().isEmpty()) {
-                throw new IllegalArgumentException("Firebase token does not contain email");
-            }
-
-            if (!decodedToken.isEmailVerified()) {
-                throw new IllegalArgumentException("Email is not verified");
-            }
-
-            String cleanEmail = email.trim().toLowerCase();
-
-            AppUser user = appUserRepository.findByFirebaseUid(firebaseUid)
-                    .orElseGet(() -> {
-                        AppUser existingUser = appUserRepository.findByEmail(cleanEmail)
-                                .orElseThrow(() -> new ResourceNotFoundException("User not found in backend"));
-
-                        existingUser.setFirebaseUid(firebaseUid);
-                        return appUserRepository.save(existingUser);
-                    });
-
-            if (!user.getEmail().equalsIgnoreCase(cleanEmail)) {
-                user.setEmail(cleanEmail);
-                user = appUserRepository.save(user);
-            }
-
-            return toAuthResponse(user);
-        } catch (Exception exception) {
-            throw new IllegalArgumentException("Invalid Firebase token");
-        }
     }
 
     @Transactional
@@ -285,8 +230,6 @@ public class AuthService {
             throw new IllegalArgumentException("Email is already taken");
         }
 
-        updateFirebaseEmailIfLinked(user, newEmail);
-
         user.setEmail(newEmail);
 
         AppUser savedUser = appUserRepository.save(user);
@@ -345,8 +288,6 @@ public class AuthService {
 
         String newPasswordHash = passwordEncoder.encode(newPassword);
 
-        updateFirebasePasswordIfLinked(user, newPassword);
-
         user.setPasswordHash(newPasswordHash);
 
         AppUser savedUser = appUserRepository.save(user);
@@ -354,105 +295,6 @@ public class AuthService {
         emailVerificationRepository.deleteByEmailIgnoreCase(email);
 
         return toAuthResponse(savedUser);
-    }
-
-    private void updateFirebasePasswordIfPossible(AppUser user, String newPassword) {
-        try {
-            String firebaseUid = user.getFirebaseUid();
-
-            if (firebaseUid != null && !firebaseUid.trim().isEmpty()) {
-                UserRecord.UpdateRequest updateRequest =
-                        new UserRecord.UpdateRequest(firebaseUid)
-                                .setPassword(newPassword);
-
-                FirebaseAuth.getInstance().updateUser(updateRequest);
-                return;
-            }
-
-            UserRecord firebaseUser = FirebaseAuth.getInstance().getUserByEmail(user.getEmail());
-
-            UserRecord.UpdateRequest updateRequest =
-                    new UserRecord.UpdateRequest(firebaseUser.getUid())
-                            .setPassword(newPassword);
-
-            FirebaseAuth.getInstance().updateUser(updateRequest);
-
-            user.setFirebaseUid(firebaseUser.getUid());
-        } catch (Exception exception) {
-            throw new IllegalArgumentException("Failed to update Firebase password");
-        }
-    }
-
-    private void updateFirebaseEmailIfPossible(AppUser user, String newEmail) {
-        try {
-            String firebaseUid = user.getFirebaseUid();
-
-            if (firebaseUid != null && !firebaseUid.trim().isEmpty()) {
-                UserRecord.UpdateRequest updateRequest =
-                        new UserRecord.UpdateRequest(firebaseUid)
-                                .setEmail(newEmail)
-                                .setEmailVerified(true);
-
-                FirebaseAuth.getInstance().updateUser(updateRequest);
-                return;
-            }
-
-            UserRecord firebaseUser = FirebaseAuth.getInstance().getUserByEmail(user.getEmail());
-
-            UserRecord.UpdateRequest updateRequest =
-                    new UserRecord.UpdateRequest(firebaseUser.getUid())
-                            .setEmail(newEmail)
-                            .setEmailVerified(true);
-
-            FirebaseAuth.getInstance().updateUser(updateRequest);
-
-            user.setFirebaseUid(firebaseUser.getUid());
-        } catch (Exception exception) {
-            throw new IllegalArgumentException("Failed to update Firebase email");
-        }
-    }
-
-    private void updateFirebasePasswordIfLinked(AppUser user, String newPassword) {
-        if (!firebaseConfig.isFirebaseEnabled()) {
-            return;
-        }
-
-        String firebaseUid = user.getFirebaseUid();
-
-        if (firebaseUid == null || firebaseUid.trim().isEmpty()) {
-            return;
-        }
-
-        try {
-            UserRecord.UpdateRequest updateRequest = new UserRecord.UpdateRequest(firebaseUid)
-                    .setPassword(newPassword);
-
-            FirebaseAuth.getInstance().updateUser(updateRequest);
-        } catch (Exception exception) {
-            throw new IllegalArgumentException("Failed to update Firebase password");
-        }
-    }
-
-    private void updateFirebaseEmailIfLinked(AppUser user, String newEmail) {
-        if (!firebaseConfig.isFirebaseEnabled()) {
-            return;
-        }
-
-        String firebaseUid = user.getFirebaseUid();
-
-        if (firebaseUid == null || firebaseUid.trim().isEmpty()) {
-            return;
-        }
-
-        try {
-            UserRecord.UpdateRequest updateRequest = new UserRecord.UpdateRequest(firebaseUid)
-                    .setEmail(newEmail)
-                    .setEmailVerified(true);
-
-            FirebaseAuth.getInstance().updateUser(updateRequest);
-        } catch (Exception exception) {
-            throw new IllegalArgumentException("Failed to update Firebase email");
-        }
     }
 
     private String generateCode() {

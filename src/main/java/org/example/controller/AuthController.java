@@ -12,8 +12,9 @@ import org.example.service.CurrentUserService;
 import org.springframework.web.bind.annotation.*;
 import org.example.dto.response.MessageResponse;
 import org.example.dto.request.RegisterConfirmRequest;
-import org.example.dto.request.FirebaseLoginRequest;import org.example.dto.request.RequestEmailChangeRequest;
-import org.example.dto.request.ConfirmEmailChangeRequest;import org.example.dto.request.PasswordResetRequest;
+import org.example.dto.request.RequestEmailChangeRequest;
+import org.example.dto.request.ConfirmEmailChangeRequest;
+import org.example.dto.request.PasswordResetRequest;
 import org.example.dto.request.PasswordResetConfirmRequest;
 import org.example.dto.response.CodeSentResponse;
 
@@ -25,13 +26,6 @@ public class AuthController {
 
     private final AuthService authService;
     private final CurrentUserService currentUserService;
-
-    @PostMapping("/firebase-login")
-    public AuthResponse firebaseLogin(
-            @Valid @RequestBody FirebaseLoginRequest request
-    ) {
-        return authService.loginWithFirebase(request.idToken());
-    }
 
     @PostMapping("/register/request")
     public CodeSentResponse requestRegistrationCode(
