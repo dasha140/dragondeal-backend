@@ -53,7 +53,12 @@ public class EmailService {
             mailSender.send(message);
             return Optional.empty();
         } catch (MailException exception) {
-            log.error("Failed to send verification code to {}: {}", email, exception.getMessage());
+            Throwable root = exception;
+            while (root.getCause() != null && root.getCause() != root) {
+                root = root.getCause();
+            }
+            log.error("Failed to send verification code to {} — [{}] {}",
+                    email, root.getClass().getSimpleName(), root.getMessage());
             throw new EmailDeliveryException("Не удалось отправить код подтверждения", exception);
         }
     }

@@ -18,9 +18,10 @@ spring:
           auth: true
           starttls:
             enable: true
-          connectiontimeout: 5000
-          timeout: 5000
-          writetimeout: 5000
+            required: true
+          connectiontimeout: 30000
+          timeout: 30000
+          writetimeout: 30000
 
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:h2:file:./data/marketgm-db;AUTO_SERVER=TRUE;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH}
