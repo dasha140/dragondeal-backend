@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.example.exception.EmailDeliveryException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -77,22 +76,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailDeliveryException.class)
     public ResponseEntity<Map<String, Object>> handleEmailDeliveryException(
             EmailDeliveryException exception,
-            HttpServletRequest request
-    ) {
-        return ResponseEntity
-                .status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body(Map.of(
-                        "timestamp", LocalDateTime.now(),
-                        "status", 503,
-                        "error", "Email Service Unavailable",
-                        "message", "Не удалось отправить код подтверждения. Попробуйте позже.",
-                        "path", request.getRequestURI()
-                ));
-    }
-
-    @ExceptionHandler(MailException.class)
-    public ResponseEntity<Map<String, Object>> handleMailException(
-            MailException exception,
             HttpServletRequest request
     ) {
         return ResponseEntity
