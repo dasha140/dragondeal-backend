@@ -1,0 +1,15 @@
+# CODEOWNERS
+* @dasha140
+
+# Backend API
+/src/ @dasha140
+
+# Blockchain contracts
+/blockchain/ @dasha140
+
+# CI/CD
+/.github/workflows/ @dasha140
+
+# Docker / Deployment
+Dockerfile @dasha140
+Procfile @dasha140

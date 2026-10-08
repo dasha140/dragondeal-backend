@@ -20,6 +20,7 @@ keystore.properties
 *.jks
 *.pem
 *.key
+application-secrets.yml
 
 ### IDE ###
 .idea/
@@ -35,6 +36,7 @@ blockchain/node_modules/
 blockchain/cache/
 blockchain/artifacts/
 blockchain/typechain-types/
+blockchain/types/
 
 ### OS ###
 .DS_Store
@@ -50,18 +52,12 @@ Thumbs.db
 .springBeans
 .sts4-cache
 
-### Maven Wrapper (keep the jar) ###
-!.mvn/wrapper/maven-wrapper.jar
-
-### IDE generated inside src (keep src) ###
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+### Agent/local ###
 .qwen/
-blockchain/types/
+
+### Docker / Deployment ###
+*.pid
+*.sock
+
+### Generated ###
+/target/
